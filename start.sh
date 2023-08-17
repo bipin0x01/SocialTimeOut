@@ -22,8 +22,16 @@ social_media_urls=(
 )
 
 # Append the URLs to /etc/hosts
+added_entries=0
 for url in "${social_media_urls[@]}"; do
-    echo "127.0.0.1 $url" | sudo tee -a /etc/hosts > /dev/null
+    echo "127.0.0.1 $url" >> "$HOSTS_FILE"
+    if [ $? -eq 0 ]; then
+        added_entries=$((added_entries + 1))
+    fi
 done
 
-echo "Entries added to /etc/hosts"
+if [ $added_entries -gt 0 ]; then
+    echo "Added $added_entries entries to $HOSTS_FILE"
+else
+    echo "Failed to add entries"
+fi
